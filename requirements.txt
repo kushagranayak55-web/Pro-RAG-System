@@ -1,19 +1,14 @@
 langchain
 langchain-core
 langchain-groq
+langchain-mistralai
 langchain-text-splitters
 
-faiss-cpu
 pypdf
-
-sentence-transformers
-langchain-huggingface
+rank-bm25
+chromadb
+cohere
 
 fastapi
 uvicorn
-
-streamlit
 python-dotenv
-chromadb
-rank-bm25
-cohere
