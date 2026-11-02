@@ -7,6 +7,9 @@ from langchain_groq import ChatGroq
 from config import GROQ_MODEL
 
 
+NOT_FOUND_MESSAGE = "I could not find the answer in the provided documents."
+
+
 # ============================================================
 # CREATE LLM
 # ============================================================
@@ -16,95 +19,82 @@ def create_llm():
     Create and return the Groq LLM.
     """
 
-    llm = ChatGroq(
+    return ChatGroq(
         model=GROQ_MODEL,
-        temperature=0
+        temperature=0,
     )
-
-    return llm
 
 
 # ============================================================
 # QUERY REWRITING
 # ============================================================
 
-def rewrite_query(
-    original_query,
-    llm
-):
+def rewrite_query(original_query, llm):
     """
-    Rewrite the user's question into a
-    retrieval-friendly search query.
+    Rewrite the user's question into a retrieval-friendly search query.
+
+    Falls back to the original question if the LLM returns nothing.
     """
 
-    # Query rewriting ke liye prompt
     rewrite_prompt = f"""
 Rewrite the following user question into a clear and
 information-rich search query for retrieving relevant
-information from a research paper.
+passages from the user's uploaded document.
 
-Keep the original meaning.
+Keep the original meaning and any specific names, terms or numbers.
+Do not assume the document type or topic.
 Return only the rewritten search query.
 
 User question:
 {original_query}
 """
 
-    # Groq se rewritten query generate kar rahe hain
-    rewritten_query = llm.invoke(
-        rewrite_prompt
-    ).content.strip()
+    rewritten_query = llm.invoke(rewrite_prompt).content.strip()
 
-    return rewritten_query
+    return rewritten_query or original_query
 
 
 # ============================================================
 # PREPARE CONTEXT
 # ============================================================
 
-def prepare_context(
-    rerank_response,
-    candidate_chunks
-):
+def prepare_context(rerank_response, candidate_chunks):
     """
-    Convert reranked chunks into a single context
-    that can be passed to the LLM.
+    Convert reranked chunks into a single labelled context string.
+
+    Every chunk is numbered and tagged with its source file and page,
+    so the LLM can cite it and the UI can show where it came from.
+
+    Returns (context, sources) where sources[i] describes chunk [i + 1].
     """
 
-    # Top reranked chunks ko store karenge
     context_parts = []
+    sources = []
 
-    # Har reranked result process kar rahe hain
-    for result in rerank_response.results:
+    for number, result in enumerate(rerank_response.results, start=1):
 
-        # Reranked result se original chunk retrieve kar rahe hain
         chunk = candidate_chunks[result.index]
 
-        # Chunk text context mein add kar rahe hain
-        context_parts.append(
-            chunk.page_content
-        )
+        source = chunk.metadata.get("source", "document")
+        page = chunk.metadata.get("page")
 
-    # Saare chunks ko ek single context mein combine kar rahe hain
-    context = "\n\n".join(context_parts)
+        label = f"[{number}] ({source}, page {page})" if page else f"[{number}] ({source})"
 
-    return context
+        context_parts.append(f"{label}\n{chunk.page_content}")
+        sources.append({"number": number, "source": source, "page": page})
+
+    return "\n\n".join(context_parts), sources
 
 
 # ============================================================
 # GENERATE FINAL ANSWER
 # ============================================================
 
-def generate_answer(
-    original_query,
-    context,
-    llm
-):
+def generate_answer(original_query, context, llm):
     """
-    Generate the final answer using the retrieved context.
+    Generate the final answer using only the retrieved context.
     """
 
-    # User question + retrieved context ko LLM ko de rahe hain
     answer_prompt = f"""
 You are a helpful research assistant.
 
@@ -114,8 +104,10 @@ Rules:
 - Do not use outside knowledge.
 - Do not make up information.
 - Give one clear and concise answer.
-- If the context does not contain enough information, say:
-  "I could not find the answer in the provided documents."
+- Cite the supporting context chunks inline using their numbers,
+  for example [1] or [2][3]. Only cite chunks you actually used.
+- If the context does not contain enough information, reply with exactly:
+  "{NOT_FOUND_MESSAGE}"
 
 User Question:
 {original_query}
@@ -124,9 +116,4 @@ Context:
 {context}
 """
 
-    # Final answer generate kar rahe hain
-    response = llm.invoke(
-        answer_prompt
-    )
-
-    return response.content
+    return llm.invoke(answer_prompt).content
