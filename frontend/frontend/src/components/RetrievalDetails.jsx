@@ -55,7 +55,10 @@ export default function RetrievalDetails({ pipeline, rewrittenQuery, chunks }) {
             {chunks.map((chunk, i) => (
               <div key={i} className="rounded-lg border border-border bg-elevated p-3">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-medium text-ink-muted">Context #{i + 1}</span>
+                  <span className="text-xs font-medium text-ink-muted">
+  Context #{chunk.number ?? i + 1}
+  {chunk.page ? ` · Page ${chunk.page}` : ""}
+</span>
                   <div className="flex items-center gap-2">
                     {chunk.score != null ? (
                       <div className="flex items-center gap-1.5">
