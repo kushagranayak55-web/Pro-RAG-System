@@ -24,7 +24,7 @@ _PATTERNS = {
     "do_not_follow": r"\bdo\s+not\s+(?:follow|obey|listen\s+to)\s+(?:the\s+|your\s+|any\s+)*(?:previous|above|prior|system|original)\b",
     "role_change": r"\byou\s+are\s+now\s+(?:a|an|the|in|my|dan|free|unrestricted|jailbroken|no\s+longer)\b",
     "unrestricted_ai": r"\b(?:ai|assistant|chatbot)\s+(?:with)?out\s+(?:any\s+)?(?:rules|restrictions|limits|limitations|filters|guidelines|censorship)\b",
-    "act_unrestricted": r"\b(?:act|behave|respond|pretend)\s+(?:as|like)\s+(?:if\s+)?[^.\n]{0,40}\b(?:without|no)\s+(?:any\s+)?(?:restrictions?|rules?|limits?|filters?|guidelines?)\b",
+    "act_unrestricted": r"\b(?:act|behave|respond|pretend)\s+(?:as|like|that\s+you\s+are|you\s+are|to\s+be)\s+(?:if\s+)?[^.\n]{0,40}\b(?:without|no)\s+(?:any\s+)?(?:restrictions?|rules?|limits?|filters?|guidelines?)\b",
     "new_instructions": r"\b(?:new|updated|revised|real|actual)\s+(?:system\s+)?(?:instructions?|prompt)\s*:",
     "prompt_leak_request": r"\b(?:reveal|show|print|repeat|output|display|leak|disclose|tell\s+me)\s+(?:me\s+)?(?:your|the)\s+(?:full\s+|entire\s+|hidden\s+|initial\s+|original\s+)?(?:system\s+)?(?:prompt|instructions)\b",
     "repeat_above": r"\brepeat\s+(?:the\s+)?(?:text|words|everything|content|conversation)\s+(?:above|before)\b",
