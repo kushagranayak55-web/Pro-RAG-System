@@ -71,3 +71,14 @@ MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "20"))
 
 # Sessions idle for longer than this are deleted automatically.
 SESSION_TTL_SECONDS = int(os.getenv("SESSION_TTL_SECONDS", "3600"))
+
+
+# Guardrails Configuration
+# Master switch. Set GUARDRAILS_ENABLED=false only to measure the app WITHOUT protection (baseline tests).
+GUARDRAILS_ENABLED = os.getenv("GUARDRAILS_ENABLED", "true").lower() != "false"
+
+# If true, chunks that look like prompt-injection attempts are never sent to the LLM.
+DROP_FLAGGED_CHUNKS = os.getenv("DROP_FLAGGED_CHUNKS", "true").lower() != "false"
+
+# Longest question accepted (characters).
+MAX_QUESTION_CHARS = int(os.getenv("MAX_QUESTION_CHARS", "1000"))
