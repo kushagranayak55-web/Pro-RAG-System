@@ -19,14 +19,19 @@ from typing import Optional
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from langsmith import traceable
 from pydantic import BaseModel
 
 from config import (
     ALLOWED_ORIGINS,
+    DROP_FLAGGED_CHUNKS,
+    GUARDRAILS_ENABLED,
     MAX_UPLOAD_MB,
     SESSION_COLLECTION_PREFIX,
     SESSION_TTL_SECONDS,
 )
+
+from guardrails import scan_chunks, check_question, sanitize_answer
 
 from loader import load_documents, create_chunks
 
@@ -163,6 +168,7 @@ class AskResponse(BaseModel):
     sources: list[dict]
     pipeline: dict
     reranked_chunks: list[ChunkPreview]
+    guardrails: dict = {}
 
 
 # ============================================================
@@ -249,6 +255,20 @@ def upload_pdf(file: UploadFile = File(...)):
         # ------------------------------------------------------
         bm25 = create_bm25_index(chunks)
 
+        # ------------------------------------------------------
+        # GUARDRAIL: scan the document for prompt-injection text
+        # ------------------------------------------------------
+        flagged = scan_chunks(chunks) if GUARDRAILS_ENABLED else {}
+
+        for index in flagged:
+            chunks[index].metadata["flagged"] = True
+
+        if flagged:
+            logger.warning(
+                "Possible prompt injection in %s: %d chunk(s) flagged %s",
+                safe_name, len(flagged), sorted({n for names in flagged.values() for n in names}),
+            )
+
     except Exception as e:
         # Undo everything created so far, then report the error.
         shutil.rmtree(pdf_directory, ignore_errors=True)
@@ -281,6 +301,90 @@ def upload_pdf(file: UploadFile = File(...)):
         "num_pages": len(documents),
         "num_chunks": len(chunks),
         "stored_count": stored_count,
+        "flagged_chunks": len(flagged),
+    }
+
+
+# ============================================================
+# TRACED PIPELINE STEPS (LangSmith)
+# ============================================================
+# Each step is a small function with light inputs (strings / ids), so a LangSmith
+# trace shows one clear span per stage. Tracing is OFF unless you set
+#   LANGSMITH_TRACING=true  and  LANGSMITH_API_KEY=...
+# Note: when tracing is on, questions and document text are sent to LangSmith.
+
+def _session(session_id):
+    with SESSIONS_LOCK:
+        return SESSIONS[session_id]
+
+
+@traceable(name="query_rewriting", run_type="chain")
+def _step_rewrite(question: str):
+    return rewrite_query(question, get_llm())
+
+
+@traceable(name="semantic_search", run_type="retriever")
+def _step_semantic(query: str, session_id: str):
+    return semantic_search(query, get_embeddings(), _session(session_id)["collection"])
+
+
+@traceable(name="bm25_search", run_type="retriever")
+def _step_bm25(query: str, session_id: str):
+    session = _session(session_id)
+    return keyword_search(query, session["bm25"], session["chunks"])
+
+
+@traceable(name="rrf_fusion", run_type="chain")
+def _step_fuse(semantic_ids: list, bm25_ids: list, session_id: str):
+    return hybrid_search(semantic_ids, bm25_ids, _session(session_id)["chunks"])
+
+
+@traceable(name="guardrail_filter", run_type="chain")
+def _step_filter_flagged(candidates: list):
+    """Never send chunks that look like prompt injection to the reranker or the LLM."""
+    if not (GUARDRAILS_ENABLED and DROP_FLAGGED_CHUNKS):
+        return candidates, 0
+
+    kept = [c for c in candidates if not c.metadata.get("flagged")]
+
+    return kept, len(candidates) - len(kept)
+
+
+@traceable(name="cohere_rerank", run_type="retriever")
+def _step_rerank(query: str, candidates: list):
+    return rerank_results(query, candidates)
+
+
+@traceable(name="generation", run_type="chain")
+def _step_generate(question: str, rerank_response, candidates: list):
+    context, sources = prepare_context(rerank_response, candidates)
+    return generate_answer(question, context, get_llm()), sources
+
+
+@traceable(name="prorag_pipeline", run_type="chain")
+def run_rag_pipeline(question: str, session_id: str):
+    rewritten_query = _step_rewrite(question)
+    semantic_ids = _step_semantic(rewritten_query, session_id)
+    bm25_ids = _step_bm25(rewritten_query, session_id)
+
+    fused = _step_fuse(semantic_ids, bm25_ids, session_id)
+    candidates, dropped = _step_filter_flagged(fused)
+
+    if candidates:
+        rerank_response = _step_rerank(rewritten_query, candidates)
+        answer, sources = _step_generate(question, rerank_response, candidates)
+    else:
+        rerank_response, sources, answer = None, [], NOT_FOUND_MESSAGE
+
+    return {
+        "rewritten_query": rewritten_query,
+        "semantic_ids": semantic_ids,
+        "bm25_ids": bm25_ids,
+        "candidates": candidates,
+        "dropped": dropped,
+        "rerank_response": rerank_response,
+        "sources": sources,
+        "answer": answer,
     }
 
 
@@ -304,46 +408,33 @@ def ask_question(payload: AskRequest):
             detail="Session not found or expired. Please upload a PDF again.",
         )
 
-    question = payload.question.strip()
-    if not question:
-        raise HTTPException(status_code=400, detail="Question cannot be empty.")
+    # GUARDRAIL: clean the question and enforce the length limit
+    if GUARDRAILS_ENABLED:
+        question, problem = check_question(payload.question)
+    else:
+        question, problem = payload.question.strip(), None
+        problem = None if question else "Question cannot be empty."
 
-    llm = get_llm()
-    embeddings = get_embeddings()
+    if problem:
+        raise HTTPException(status_code=400, detail=problem)
 
     try:
-        # 1. QUERY REWRITING
-        rewritten_query = rewrite_query(question, llm)
-
-        # 2. SEMANTIC SEARCH
-        semantic_ids = semantic_search(rewritten_query, embeddings, session["collection"])
-
-        # 3. BM25 KEYWORD SEARCH
-        bm25_ids = keyword_search(rewritten_query, session["bm25"], session["chunks"])
-
-        # 4. RRF HYBRID FUSION
-        candidate_chunks = hybrid_search(semantic_ids, bm25_ids, session["chunks"])
-
-        if candidate_chunks:
-            # 5. COHERE RERANKING
-            rerank_response = rerank_results(rewritten_query, candidate_chunks)
-
-            # 6. CONTEXT PREPARATION (numbered, with source + page)
-            context, sources = prepare_context(rerank_response, candidate_chunks)
-
-            # 7. GROQ GENERATION
-            answer = generate_answer(question, context, llm)
-        else:
-            rerank_response = None
-            sources = []
-            answer = NOT_FOUND_MESSAGE
-
+        out = run_rag_pipeline(question, payload.session_id)
     except Exception as e:
         logger.exception("Question answering failed")
         raise HTTPException(
             status_code=500,
             detail=f"Something went wrong while generating your answer: {e}",
         )
+
+    # GUARDRAIL: check the answer (prompt leak, markdown images, dangerous HTML)
+    answer, issues = (sanitize_answer(out["answer"]) if GUARDRAILS_ENABLED else (out["answer"], []))
+
+    if issues:
+        logger.warning("Answer modified by guardrails: %s", issues)
+
+    candidate_chunks = out["candidates"]
+    rerank_response = out["rerank_response"]
 
     # Every count and score below comes directly from the pipeline run above.
     reranked_chunks = []
@@ -363,8 +454,8 @@ def ask_question(payload: AskRequest):
 
     pipeline = {
         "query_rewriting": {"status": "complete"},
-        "semantic_search": {"status": "complete", "matches": len(semantic_ids)},
-        "bm25_search": {"status": "complete", "matches": len(bm25_ids)},
+        "semantic_search": {"status": "complete", "matches": len(out["semantic_ids"])},
+        "bm25_search": {"status": "complete", "matches": len(out["bm25_ids"])},
         "rrf_fusion": {"status": "complete", "candidates": len(candidate_chunks)},
         "reranking": {"status": "complete", "selected": len(reranked_chunks)},
         "generation": {"status": "complete"},
@@ -373,11 +464,16 @@ def ask_question(payload: AskRequest):
     return AskResponse(
         session_id=payload.session_id,
         original_query=question,
-        rewritten_query=rewritten_query,
+        rewritten_query=out["rewritten_query"],
         answer=answer,
-        sources=sources,
+        sources=out["sources"],
         pipeline=pipeline,
         reranked_chunks=reranked_chunks,
+        guardrails={
+            "enabled": GUARDRAILS_ENABLED,
+            "flagged_chunks_dropped": out["dropped"],
+            "answer_issues": issues,
+        },
     )
 
 
