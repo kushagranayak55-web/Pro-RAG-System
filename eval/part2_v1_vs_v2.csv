@@ -1,0 +1,7 @@
+setup,hit@1,hit@3,MRR@3
+BM25 only | v1,40.0,64.0,0.503
+BM25 only | v2,54.0,72.0,0.623
+Hybrid (RRF) | v1,54.0,76.0,0.64
+Hybrid (RRF) | v2,58.0,78.0,0.68
+Hybrid + rerank | v1,58.0,82.0,0.69
+Hybrid + rerank | v2,58.0,88.0,0.72

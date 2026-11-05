@@ -1,0 +1,51 @@
+id,type,question,vector_first_hit_rank,bm25_first_hit_rank,hybrid_first_hit_rank,hybrid_rerank_first_hit_rank
+a01,keyword,How many identical layers are stacked in the Transformer encoder?,1.0,1.0,1.0,1.0
+a02,keyword,What BLEU score did the big Transformer reach on the WMT 2014 English-to-German task?,1.0,1.0,1.0,1.0
+a03,keyword,"In the original Transformer paper, which beta1, beta2 and epsilon values does the Adam optimizer use?",5.0,5.0,2.0,1.0
+a04,keyword,How many warmup steps does the Transformer learning rate schedule use?,1.0,4.0,1.0,2.0
+a05,keyword,What is the inner-layer dimensionality of the position-wise feed-forward network in the Transformer?,1.0,1.0,1.0,1.0
+a06,keyword,"How many parallel attention heads does the base Transformer use, and what is the key dimension per head?",1.0,2.0,1.0,1.0
+a07,keyword,"In the Transformer paper, what residual dropout rate and label smoothing value were used for the base model?",1.0,1.0,1.0,1.0
+a08,paraphrase,What problem does dividing the attention scores by the square root of the key dimension solve?,1.0,1.0,1.0,1.0
+a09,paraphrase,How does the model know the order of tokens when it has neither recurrence nor convolution?,1.0,1.0,2.0,1.0
+a10,paraphrase,What is the benefit of running several attention heads instead of a single one?,1.0,5.0,1.0,1.0
+a11,hard,Compare self-attention and recurrent layers in per-layer complexity and number of sequential operations.,1.0,1.0,1.0,1.0
+a12,hard,"How long were the base and big Transformer models trained, and on what hardware?",1.0,1.0,1.0,2.0
+a13,hard,"What F1 did the Transformer reach on WSJ constituency parsing, trained on WSJ only and semi-supervised?",2.0,1.0,2.0,1.0
+a14,keyword,How large was the WMT 2014 English-German training set and what vocabulary did the Transformer use for it?,1.0,1.0,1.0,1.0
+r01,keyword,How many trainable parameters do the RAG models contain in total?,1.0,1.0,1.0,1.0
+r02,keyword,"How is the Wikipedia knowledge source split into documents for RAG, and how many documents result?",2.0,1.0,2.0,1.0
+r03,keyword,What Exact Match did RAG-Sequence score on the Natural Questions test set?,1.0,,,4.0
+r04,keyword,"In the index hot-swapping experiment, how accurate was RAG when the index year matched the world leaders' year?",2.0,3.0,2.0,1.0
+r05,keyword,"In the Jeopardy human evaluation, in what percentage of cases was RAG judged more factual than BART?",1.0,1.0,1.0,1.0
+r06,keyword,Which retriever does RAG use and what encoders does it have?,,,,2.0
+r07,paraphrase,How does the RAG-Sequence model differ from RAG-Token in how it uses retrieved passages?,1.0,1.0,1.0,1.0
+r08,paraphrase,Why do the authors not update the document encoder during RAG training?,1.0,1.0,1.0,1.0
+r09,paraphrase,How can the knowledge of a RAG model be refreshed without retraining it?,3.0,,,3.0
+r10,paraphrase,Why did a keyword-based retriever beat the learned retriever on the fact verification task?,,1.0,1.0,1.0
+r11,paraphrase,What is retrieval collapse in RAG training?,1.0,1.0,1.0,1.0
+r12,hard,How many documents does RAG retrieve at test time for open-domain QA with RAG-Token versus RAG-Sequence?,,2.0,,2.0
+r13,hard,"What are the train, development and test sizes of the Natural Questions dataset used for RAG?",1.0,1.0,1.0,1.0
+r14,hard,How did RAG deal with CuratedTrec answers given as regular expressions?,1.0,1.0,1.0,1.0
+r15,keyword,Which three class labels does the FEVER task use for claim classification?,1.0,1.0,1.0,2.0
+l01,keyword,Which AdamW hyperparameters were used to pretrain Llama 2?,1.0,2.0,1.0,1.0
+l02,keyword,On how many tokens was Llama 2 pretrained?,4.0,,,
+l03,keyword,What is the vocabulary size of the Llama 2 tokenizer?,2.0,1.0,1.0,1.0
+l04,keyword,How many GPU hours were needed to pretrain Llama 2 70B and how much carbon did it emit?,1.0,1.0,1.0,2.0
+l05,keyword,How many annotations did the Llama 2 team collect for supervised fine-tuning before they stopped?,3.0,4.0,1.0,3.0
+l06,keyword,"What learning rate, batch size, sequence length and number of epochs were used for Llama 2 supervised fine-tuning?",,1.0,2.0,1.0
+l07,keyword,What batch size and clip threshold were used for each PPO iteration in Llama 2-Chat training?,,1.0,1.0,1.0
+l08,keyword,What share of the Llama 2 safety preference data has both responses safe?,1.0,1.0,1.0,1.0
+l09,keyword,How many comparisons does the Meta Safety and Helpfulness preference dataset contain?,1.0,3.0,2.0,2.0
+l10,keyword,"For how many epochs were the Llama 2 reward models trained, and what maximum learning rates were used?",4.0,,,2.0
+l11,paraphrase,Which technique helps Llama 2-Chat keep following an instruction over many dialogue turns?,1.0,2.0,2.0,2.0
+l12,paraphrase,How does safety context distillation work in Llama 2-Chat?,2.0,5.0,4.0,4.0
+l13,paraphrase,Why did the Llama 2 team prefer a small set of own annotations over millions of third-party fine-tuning examples?,,1.0,2.0,1.0
+l14,paraphrase,Which attention variant do the larger Llama 2 models use to make inference more scalable?,,,,
+l15,paraphrase,Which two reinforcement learning methods were used to refine Llama 2-Chat?,1.0,2.0,1.0,1.0
+l16,hard,What truthfulness and toxicity scores did the pretrained Llama 2 70B get on TruthfulQA and ToxiGen?,2.0,5.0,2.0,2.0
+l17,hard,How does the Llama 2 reward model loss take into account how much better the chosen response is?,4.0,2.0,1.0,3.0
+l18,keyword,"How many GPU hours in total did Llama 2 pretraining take, and how much was emitted overall?",1.0,1.0,1.0,2.0
+l19,keyword,On what clusters and GPUs was Llama 2 pretrained?,,,,
+m01,hard,Compare the number of learning-rate warmup steps of the original Transformer and of Llama 2 pretraining.,,2.0,4.0,
+m02,hard,How do the Transformer and Llama 2 differ in how they encode token positions?,2.0,,4.0,2.0

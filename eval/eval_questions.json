@@ -1,0 +1,915 @@
+[
+ {
+  "id": "a01",
+  "type": "keyword",
+  "question": "How many identical layers are stacked in the Transformer encoder?",
+  "gold_answer": "N = 6 identical layers (with d_model = 512).",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "The encoder is composed of a stack of N = 6 identical layers"
+    ],
+    "pages": [
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a02",
+  "type": "keyword",
+  "question": "What BLEU score did the big Transformer reach on the WMT 2014 English-to-German task?",
+  "gold_answer": "28.4 BLEU.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "achieves 28.4 BLEU on the WMT 2014",
+     "establishing a new state-of-the-art BLEU score of 28.4"
+    ],
+    "pages": [
+     1,
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a03",
+  "type": "keyword",
+  "question": "In the original Transformer paper, which beta1, beta2 and epsilon values does the Adam optimizer use?",
+  "gold_answer": "beta1 = 0.9, beta2 = 0.98, epsilon = 10^-9.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "We used the Adam optimizer"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a04",
+  "type": "keyword",
+  "question": "How many warmup steps does the Transformer learning rate schedule use?",
+  "gold_answer": "warmup_steps = 4000.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "We used warmup_steps = 4000"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a05",
+  "type": "keyword",
+  "question": "What is the inner-layer dimensionality of the position-wise feed-forward network in the Transformer?",
+  "gold_answer": "d_ff = 2048 (input/output dimension d_model = 512).",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "and the inner-layer has dimensionality"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a06",
+  "type": "keyword",
+  "question": "How many parallel attention heads does the base Transformer use, and what is the key dimension per head?",
+  "gold_answer": "h = 8 heads, with d_k = d_v = 64.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "we employ h = 8 parallel attention layers, or heads"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a07",
+  "type": "keyword",
+  "question": "In the Transformer paper, what residual dropout rate and label smoothing value were used for the base model?",
+  "gold_answer": "Residual dropout P_drop = 0.1 and label smoothing epsilon_ls = 0.1.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "For the base model, we use a rate of",
+     "we employed label smoothing of value"
+    ],
+    "pages": [
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a08",
+  "type": "paraphrase",
+  "question": "What problem does dividing the attention scores by the square root of the key dimension solve?",
+  "gold_answer": "For large d_k the dot products grow large and push the softmax into regions with extremely small gradients; scaling by 1/sqrt(d_k) counteracts this.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "pushing the softmax function into regions where it has"
+    ],
+    "pages": [
+     4
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a09",
+  "type": "paraphrase",
+  "question": "How does the model know the order of tokens when it has neither recurrence nor convolution?",
+  "gold_answer": "It adds positional encodings (sine and cosine functions of different frequencies) to the input embeddings.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "we must inject some information about the relative or absolute position"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a10",
+  "type": "paraphrase",
+  "question": "What is the benefit of running several attention heads instead of a single one?",
+  "gold_answer": "Multi-head attention lets the model jointly attend to information from different representation subspaces at different positions; a single head's averaging inhibits this.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "Multi-head attention allows the model to jointly attend to information from different representation subspaces"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a11",
+  "type": "hard",
+  "question": "Compare self-attention and recurrent layers in per-layer complexity and number of sequential operations.",
+  "gold_answer": "Self-attention: O(n^2 * d) per layer and O(1) sequential operations. Recurrent: O(n * d^2) per layer and O(n) sequential operations.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "a self-attention layer connects all positions with a constant number of sequentially",
+     "Maximum path lengths, per-layer complexity and minimum number of sequential operations"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a12",
+  "type": "hard",
+  "question": "How long were the base and big Transformer models trained, and on what hardware?",
+  "gold_answer": "Base: 100,000 steps (about 12 hours); big: 300,000 steps (3.5 days); on one machine with 8 NVIDIA P100 GPUs.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "We trained the base models for a total of 100,000 steps or 12 hours"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a13",
+  "type": "hard",
+  "question": "What F1 did the Transformer reach on WSJ constituency parsing, trained on WSJ only and semi-supervised?",
+  "gold_answer": "91.3 F1 (WSJ only) and 92.7 F1 (semi-supervised).",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "The Transformer generalizes well to English constituency parsing",
+     "Transformer (4 layers) semi-supervised 92.7"
+    ],
+    "pages": [
+     10
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a14",
+  "type": "keyword",
+  "question": "How large was the WMT 2014 English-German training set and what vocabulary did the Transformer use for it?",
+  "gold_answer": "About 4.5 million sentence pairs, with a shared byte-pair-encoding vocabulary of about 37,000 tokens.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "consisting of about 4.5 million"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r01",
+  "type": "keyword",
+  "question": "How many trainable parameters do the RAG models contain in total?",
+  "gold_answer": "About 626M trainable parameters (BERT-base encoders of 110M each, plus 406M from BART-large).",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "making a total of 626M trainable"
+    ],
+    "pages": [
+     18
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r02",
+  "type": "keyword",
+  "question": "How is the Wikipedia knowledge source split into documents for RAG, and how many documents result?",
+  "gold_answer": "Each article of the December 2018 dump is split into disjoint 100-word chunks, giving 21M documents.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "Each Wikipedia article is split into disjoint 100-word chunks"
+    ],
+    "pages": [
+     4
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r03",
+  "type": "keyword",
+  "question": "What Exact Match did RAG-Sequence score on the Natural Questions test set?",
+  "gold_answer": "44.5 EM.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "RAG-Seq. 44.5 56.8/68.0 45.2 52.2"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r04",
+  "type": "keyword",
+  "question": "In the index hot-swapping experiment, how accurate was RAG when the index year matched the world leaders' year?",
+  "gold_answer": "70% with the 2016 index for 2016 leaders and 68% with the 2018 index for 2018 leaders (mismatched: 12% and 4%).",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "RAG answers 70% correctly using the 2016 index for"
+    ],
+    "pages": [
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r05",
+  "type": "keyword",
+  "question": "In the Jeopardy human evaluation, in what percentage of cases was RAG judged more factual than BART?",
+  "gold_answer": "42.7% (BART was more factual in only 7.1%).",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "while RAG was more factual in 42.7% of cases"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r06",
+  "type": "keyword",
+  "question": "Which retriever does RAG use and what encoders does it have?",
+  "gold_answer": "A DPR bi-encoder with a BERT-base query encoder and a BERT-base document encoder, searched with Maximum Inner Product Search.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "is a dense representation of a document produced by a BERTBASE document encoder"
+    ],
+    "pages": [
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r07",
+  "type": "paraphrase",
+  "question": "How does the RAG-Sequence model differ from RAG-Token in how it uses retrieved passages?",
+  "gold_answer": "RAG-Sequence uses the same retrieved document for the whole output sequence; RAG-Token can use a different document for each output token.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "In one approach, RAG-Sequence, the model uses the same document to predict each target token"
+    ],
+    "pages": [
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r08",
+  "type": "paraphrase",
+  "question": "Why do the authors not update the document encoder during RAG training?",
+  "gold_answer": "Updating it is costly because the document index would have to be rebuilt periodically; they found it unnecessary and fine-tune only the query encoder and the generator.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "Updating the document encoder BERTd during training is costly"
+    ],
+    "pages": [
+     4
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r09",
+  "type": "paraphrase",
+  "question": "How can the knowledge of a RAG model be refreshed without retraining it?",
+  "gold_answer": "By replacing its non-parametric memory, the document index (index hot-swapping).",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "we can update RAG's world knowledge by simply replacing its non-parametric memory",
+     "Parametric-only models like T5 or BART need further training"
+    ],
+    "pages": [
+     7,
+     8
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r10",
+  "type": "paraphrase",
+  "question": "Why did a keyword-based retriever beat the learned retriever on the fact verification task?",
+  "gold_answer": "FEVER claims are heavily entity-centric and therefore well suited to word-overlap retrieval such as BM25.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "FEVER claims are heavily entity-centric and thus well-suited for word overlap-based retrieval"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r11",
+  "type": "paraphrase",
+  "question": "What is retrieval collapse in RAG training?",
+  "gold_answer": "The retriever learns to return the same documents regardless of the input, so the generator learns to ignore them (observed e.g. for story generation).",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "would collapse and learn to retrieve the same documents regardless of the input"
+    ],
+    "pages": [
+     19
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r12",
+  "type": "hard",
+  "question": "How many documents does RAG retrieve at test time for open-domain QA with RAG-Token versus RAG-Sequence?",
+  "gold_answer": "15 documents for RAG-Token and 50 for RAG-Sequence (using Thorough Decoding); 10 for MS-MARCO and Jeopardy.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "using 15 retrieved documents for RAG-Token models"
+    ],
+    "pages": [
+     17
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r13",
+  "type": "hard",
+  "question": "What are the train, development and test sizes of the Natural Questions dataset used for RAG?",
+  "gold_answer": "Train 79,169; development 8,758; test 3,611.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "Natural Questions 79169 8758 3611"
+    ],
+    "pages": [
+     19
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r14",
+  "type": "hard",
+  "question": "How did RAG deal with CuratedTrec answers given as regular expressions?",
+  "gold_answer": "It retrieved the top 1000 documents per query and used the answer that most frequently matches the regex pattern as the supervision target.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "use the answer that most frequently matches the regex pattern as the supervision target"
+    ],
+    "pages": [
+     18
+    ]
+   }
+  ]
+ },
+ {
+  "id": "r15",
+  "type": "keyword",
+  "question": "Which three class labels does the FEVER task use for claim classification?",
+  "gold_answer": "Supports, refutes, and not enough info.",
+  "groups": [
+   {
+    "doc": "rag",
+    "evidence": [
+     "We map FEVER class labels (supports, refutes, or not enough info) to single output tokens"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l01",
+  "type": "keyword",
+  "question": "Which AdamW hyperparameters were used to pretrain Llama 2?",
+  "gold_answer": "AdamW with beta1 = 0.9, beta2 = 0.95, eps = 1e-5; cosine schedule with 2000 warmup steps, final LR 10% of peak; weight decay 0.1; gradient clipping 1.0.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "We trained using the AdamW optimizer"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l02",
+  "type": "keyword",
+  "question": "On how many tokens was Llama 2 pretrained?",
+  "gold_answer": "2 trillion tokens (context length 4k).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "We trained on 2 trillion tokens of data"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l03",
+  "type": "keyword",
+  "question": "What is the vocabulary size of the Llama 2 tokenizer?",
+  "gold_answer": "32k tokens (BPE via SentencePiece).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "The total vocabulary size is 32k tokens"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l04",
+  "type": "keyword",
+  "question": "How many GPU hours were needed to pretrain Llama 2 70B and how much carbon did it emit?",
+  "gold_answer": "1,720,320 GPU hours and 291.42 tCO2eq.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "70B 1720320 400 291.42"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l05",
+  "type": "keyword",
+  "question": "How many annotations did the Llama 2 team collect for supervised fine-tuning before they stopped?",
+  "gold_answer": "27,540 annotations.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "We stopped annotating SFT after collecting a total of 27,540 annotations"
+    ],
+    "pages": [
+     9
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l06",
+  "type": "keyword",
+  "question": "What learning rate, batch size, sequence length and number of epochs were used for Llama 2 supervised fine-tuning?",
+  "gold_answer": "Cosine schedule starting at 2e-5, weight decay 0.1, batch size 64, sequence length 4096 tokens, 2 epochs.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "a weight decay of 0.1, a batch size of 64, and a sequence length of 4096 tokens",
+     "we fine-tune the model for 2 epochs"
+    ],
+    "pages": [
+     9
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l07",
+  "type": "keyword",
+  "question": "What batch size and clip threshold were used for each PPO iteration in Llama 2-Chat training?",
+  "gold_answer": "Batch size 512, PPO clip threshold 0.2, mini-batch size 64, one gradient step per mini-batch.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "a PPO clip threshold of0.2"
+    ],
+    "pages": [
+     15
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l08",
+  "type": "keyword",
+  "question": "What share of the Llama 2 safety preference data has both responses safe?",
+  "gold_answer": "47% (18% preferred response safe and other unsafe; 35% both unsafe).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "with 18%, 47%, and 35% of the safety dataset falling into each bin"
+    ],
+    "pages": [
+     10
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l09",
+  "type": "keyword",
+  "question": "How many comparisons does the Meta Safety and Helpfulness preference dataset contain?",
+  "gold_answer": "1,418,091 comparisons.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "Meta (Safety & Helpfulness) 1,418,091"
+    ],
+    "pages": [
+     11
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l10",
+  "type": "keyword",
+  "question": "For how many epochs were the Llama 2 reward models trained, and what maximum learning rates were used?",
+  "gold_answer": "One epoch; maximum learning rate 5e-6 for the 70B model and 1e-5 for the others.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "We train for one epoch over the training data"
+    ],
+    "pages": [
+     12
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l11",
+  "type": "paraphrase",
+  "question": "Which technique helps Llama 2-Chat keep following an instruction over many dialogue turns?",
+  "gold_answer": "Ghost Attention (GAtt).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "we propose Ghost Attention (GAtt)"
+    ],
+    "pages": [
+     16
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l12",
+  "type": "paraphrase",
+  "question": "How does safety context distillation work in Llama 2-Chat?",
+  "gold_answer": "Prompts are prefixed with a safety preprompt to generate safer responses, then the model is fine-tuned on those safer responses without the preprompt.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "generating safer model responses by prefixing a prompt with a safety preprompt"
+    ],
+    "pages": [
+     23
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l13",
+  "type": "paraphrase",
+  "question": "Why did the Llama 2 team prefer a small set of own annotations over millions of third-party fine-tuning examples?",
+  "gold_answer": "Third-party data lacked diversity and quality; fewer but higher-quality vendor annotations notably improved results.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "By setting aside millions of examples from third-party datasets"
+    ],
+    "pages": [
+     9
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l14",
+  "type": "paraphrase",
+  "question": "Which attention variant do the larger Llama 2 models use to make inference more scalable?",
+  "gold_answer": "Grouped-query attention (GQA), in the 34B and 70B models.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "Bigger models 34B and 70B use Grouped-Query Attention (GQA) for improved inference scalability"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l15",
+  "type": "paraphrase",
+  "question": "Which two reinforcement learning methods were used to refine Llama 2-Chat?",
+  "gold_answer": "Rejection sampling fine-tuning and Proximal Policy Optimization (PPO).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "In Rejection Sampling fine-tuning, we sample all the outputs given the initial policy",
+     "specifically through rejection sampling and Proximal Policy"
+    ],
+    "pages": [
+     5,
+     14
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l16",
+  "type": "hard",
+  "question": "What truthfulness and toxicity scores did the pretrained Llama 2 70B get on TruthfulQA and ToxiGen?",
+  "gold_answer": "TruthfulQA 50.18 (higher is better) and ToxiGen 24.60 (lower is better).",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "34B 43.45 21.19 70B 50.18 24.60"
+    ],
+    "pages": [
+     23
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l17",
+  "type": "hard",
+  "question": "How does the Llama 2 reward model loss take into account how much better the chosen response is?",
+  "gold_answer": "A margin term m(r) based on the preference rating is added to the binary ranking loss; larger margins for clearly distinct responses.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "we further add a margin component in the loss"
+    ],
+    "pages": [
+     11
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l18",
+  "type": "keyword",
+  "question": "How many GPU hours in total did Llama 2 pretraining take, and how much was emitted overall?",
+  "gold_answer": "3.3M GPU hours on A100-80GB; 539 tCO2eq, 100% offset by Meta's sustainability program.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "A cumulative of 3.3M GPU hours of computation was performed"
+    ],
+    "pages": [
+     7
+    ]
+   }
+  ]
+ },
+ {
+  "id": "l19",
+  "type": "keyword",
+  "question": "On what clusters and GPUs was Llama 2 pretrained?",
+  "gold_answer": "Meta's Research SuperCluster (RSC) and internal production clusters, both with NVIDIA A100 GPUs.",
+  "groups": [
+   {
+    "doc": "llama2",
+    "evidence": [
+     "pretrained our models on Meta's Research SuperCluster"
+    ],
+    "pages": [
+     6
+    ]
+   }
+  ]
+ },
+ {
+  "id": "m01",
+  "type": "hard",
+  "question": "Compare the number of learning-rate warmup steps of the original Transformer and of Llama 2 pretraining.",
+  "gold_answer": "Transformer: 4000 warmup steps. Llama 2: 2000 warmup steps.",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "We used warmup_steps = 4000"
+    ],
+    "pages": [
+     7
+    ]
+   },
+   {
+    "doc": "llama2",
+    "evidence": [
+     "with warmup of 2000 steps"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "m02",
+  "type": "hard",
+  "question": "How do the Transformer and Llama 2 differ in how they encode token positions?",
+  "gold_answer": "Transformer: fixed sinusoidal (sine/cosine) positional encodings. Llama 2: rotary positional embeddings (RoPE).",
+  "groups": [
+   {
+    "doc": "attention",
+    "evidence": [
+     "we use sine and cosine functions of different frequencies"
+    ],
+    "pages": [
+     6
+    ]
+   },
+   {
+    "doc": "llama2",
+    "evidence": [
+     "rotary positional embeddings"
+    ],
+    "pages": [
+     5
+    ]
+   }
+  ]
+ },
+ {
+  "id": "u01",
+  "type": "unanswerable",
+  "question": "What BLEU score did the Transformer achieve on the WMT 2014 English-to-Czech translation task?",
+  "gold_answer": "Not in the documents.",
+  "groups": []
+ },
+ {
+  "id": "u02",
+  "type": "unanswerable",
+  "question": "What score did the RAG model achieve on the HotpotQA dataset?",
+  "gold_answer": "Not in the documents.",
+  "groups": []
+ },
+ {
+  "id": "u03",
+  "type": "unanswerable",
+  "question": "What is the score of Llama 2-Chat on the MMLU-Pro benchmark?",
+  "gold_answer": "Not in the documents.",
+  "groups": []
+ },
+ {
+  "id": "u04",
+  "type": "unanswerable",
+  "question": "Who is the CEO of Meta that announced the release of Llama 2?",
+  "gold_answer": "Not in the documents.",
+  "groups": []
+ },
+ {
+  "id": "u05",
+  "type": "unanswerable",
+  "question": "What was the total monetary cost of training the big Transformer model?",
+  "gold_answer": "Not in the documents.",
+  "groups": []
+ }
+]
